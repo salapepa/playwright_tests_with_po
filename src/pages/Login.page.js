@@ -2,6 +2,7 @@ const { BasePage } = require('./Base.page');
 
 export class LoginPage extends BasePage {
     get userName() { return this.page.locator('#user-name'); }
+    userNameLocator = this.page.locator('#user-name');
 
     get password() { return this.page.locator('#password'); }
 

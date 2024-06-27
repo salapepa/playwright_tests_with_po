@@ -3,25 +3,48 @@ const { expect } = require('@playwright/test');
 const { test } = require('../fixture');
 
 test.describe('', () => {
-    test('Perform login', async ({ loginPage, inventoryPage }) => {
-        await loginPage.navigate();
-        await loginPage.performLogin('standard_user', 'secret_sauce');
 
-        await expect(inventoryPage.headerTitle).toBeVisible();
+    test.beforeEach(async ({ app }) => {
+        await app.loginPage.navigate();
+        await app.loginPage.performLogin('standard_user', 'secret_sauce');
 
-        expect(await inventoryPage.inventoryItems.count()).toBeGreaterThanOrEqual(1);
+        await expect(app.inventoryPage.headerTitle).toBeVisible();
+      })
+
+    test('Perform login', async ({ app }) => {
+        expect(await app.inventoryPage.inventoryItems.count()).toBeGreaterThanOrEqual(1);
     });
 
-    test('Add and remove product from the cart', async ({ loginPage, inventoryPage, shopingCartPage }) => {
-        await loginPage.navigate();
-        await loginPage.performLogin('standard_user', 'secret_sauce');
-        await inventoryPage.addItemToCartById(0);
-        expect(await inventoryPage.getNumberOfItemsInCart()).toBe('1');
+    test('Add and remove product from the cart', async ({app }) => {
+        await app.inventoryPage.addItemToCartById(0);
+        expect(await app.inventoryPage.getNumberOfItemsInCart()).toBe('1');
 
-        await inventoryPage.shopingCart.click();
-        expect(await shopingCartPage.cartItems.count()).toBeGreaterThanOrEqual(1);
+        await app.inventoryPage.shopingCart.click();
+        expect(await app.shopingCartPage.cartItems.count()).toBeGreaterThanOrEqual(1);
 
-        await shopingCartPage.removeCartItemById(0);
-        await expect(shopingCartPage.cartItems).not.toBeAttached();
+        await app.shopingCartPage.removeCartItemById(0);
+        await expect(app.shopingCartPage.cartItems).not.toBeAttached();
     });
+
+    test('Perform sorting Price high to low', async ({ app }) => {
+        await expect(app.inventoryPage.headerTitle).toBeVisible();
+        await app.inventoryPage.clickSorting('Price (high to low)');
+        await app.inventoryPage.expectSortingPriceHighLowIsCorrect();
+    });
+
+    test('Perform sorting Price low to high', async ({ app }) => {
+        await app.inventoryPage.clickSorting('Price (low to high)');
+        await app.inventoryPage.expectSortingPriceLowToHighIsCorrect();
+    });
+
+    test('Perform sorting Z-A', async ({ app }) => {
+        await app.inventoryPage.clickSorting('Name (Z to A)');
+        await app.inventoryPage.expectSortingNameZtoAIsCorrect();
+    });
+
+    test('Perform sorting A-Z', async ({ app }) => {
+        await app.inventoryPage.clickSorting('Name (A to Z)');
+        await app.inventoryPage.expectSortingNameAtoZIsCorrect();
+    });
+    
 });
