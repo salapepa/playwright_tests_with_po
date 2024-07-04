@@ -10,7 +10,9 @@ export class InventoryPage extends BaseSwagLabPage {
 
     get addItemToCartBtns() { return this.page.locator('[id^="add-to-cart"]'); }
 
-    filterSelectLocator = this.page.locator('.select_container') 
+    filterSelectLocator = this.page.locator('.select_container'); 
+    itemPriceLocator = this.page.locator('[data-test="inventory-item-price"]');
+    goToCartLocator = this.page.locator('[data-test="shopping-cart-link"]');
     
     async addItemToCartById(id) {
         await this.addItemToCartBtns.nth(id).click();
@@ -20,6 +22,10 @@ export class InventoryPage extends BaseSwagLabPage {
         await this.filterSelectLocator.click()
         await this.sortByText(text);
 
+    }
+
+    async clickGoToCart(){
+       await this.goToCartLocator.click()
     }
 
     async sortByText(text){
@@ -66,4 +72,31 @@ export class InventoryPage extends BaseSwagLabPage {
         let allNamesSorted = allNames.sort((a,b)=>b - a);
         expect(allNamesSorted).toEqual(allNames);
     }
+
+    async addRandomItemsToCart() {
+        let allNames = await this.page.locator('[data-test="inventory-item-name"]').allInnerTexts(); 
+        let selectedNames = [];
+        let allItesTogether= [];
+        for (let i = 0; i < 4; i++) {
+            const popedElement = this.popRandomElementFrom(allNames, selectedNames);
+            const price = await this.page.locator('[data-test="inventory-item-description"]').filter({ hasText: popedElement }).
+            locator('[data-test="inventory-item-price"]').innerText();
+            const description = await this.page.locator('[data-test="inventory-item-description"]').filter({ hasText: popedElement }).
+            locator('[data-test="inventory-item-desc"]').innerText();
+            allItesTogether.push({
+                name:popedElement,description: description, price:price
+            })
+            await this.page.locator('[data-test="inventory-item-description"]').filter({ hasText: popedElement }).getByRole('button', { name: "Add to cart" }).click();
+        }
+        return allItesTogether;
+    }
+
+    popRandomElementFrom = (a, newA) => {
+        const indexToPop = Math.floor(Math.random() * a.length);
+        const poppedElement = a.splice(indexToPop, 1)[0];
+        newA.push(poppedElement);
+        return poppedElement;
+    }
+
+    
 }

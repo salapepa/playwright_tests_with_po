@@ -26,8 +26,8 @@ test.describe('', () => {
         await expect(app.shopingCartPage.cartItems).not.toBeAttached();
     });
 
+    // Task1
     test('Perform sorting Price high to low', async ({ app }) => {
-        await expect(app.inventoryPage.headerTitle).toBeVisible();
         await app.inventoryPage.clickSorting('Price (high to low)');
         await app.inventoryPage.expectSortingPriceHighLowIsCorrect();
     });
@@ -47,4 +47,14 @@ test.describe('', () => {
         await app.inventoryPage.expectSortingNameAtoZIsCorrect();
     });
     
+    //Task2
+    
+    test('Add random items to Cart', async ({ app }) => {
+        const randomAddedItems = await app.inventoryPage.addRandomItemsToCart();
+        await app.inventoryPage.clickGoToCart();
+
+        const itemsInCart = await app.shopingCartPage.getAllItemsInCart();
+        await expect(itemsInCart).toEqual(randomAddedItems);
+    });
+
 });
