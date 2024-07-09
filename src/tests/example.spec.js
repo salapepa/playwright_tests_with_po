@@ -52,7 +52,6 @@ test.describe('', () => {
     test('Add random items to Cart', async ({ app }) => {
         const randomAddedItems = await app.inventoryPage.addRandomItemsToCart();
         await app.inventoryPage.clickGoToCart();
-
         const itemsInCart = await app.shopingCartPage.getAllItemsInCart();
         await expect(itemsInCart).toEqual(randomAddedItems);
     });
