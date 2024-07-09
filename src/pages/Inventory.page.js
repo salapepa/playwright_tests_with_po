@@ -120,23 +120,23 @@ export class InventoryPage extends BaseSwagLabPage {
     let allItesTogether = [];
     for (let i = 0; i < 4; i++) {
       //const utils =  new Utils;
-      const popedElement = popRandomElementFrom(allNames, selectedNames);
-      const item = await this.#inventoryItemNameSelector(popedElement);
+      const randomItemName = popRandomElementFrom(allNames, selectedNames);
+      const item = await this.#inventoryItemNameSelector(randomItemName);
 
       allItesTogether.push(item);
       await this.page
         .locator('[data-test="inventory-item-description"]')
-        .filter({ hasText: popedElement })
+        .filter({ hasText: randomItemName })
         .getByRole("button", { name: "Add to cart" })
         .click();
     }
     return allItesTogether;
   }
 
-  async #inventoryItemNameSelector(popedElement) {
-    const price = await this.priceLocator(popedElement).innerText();
-    const description = await await this.descriptionLocator(popedElement).innerText();
+  async #inventoryItemNameSelector(randomItemName) {
+    const price = await this.priceLocator(randomItemName).innerText();
+    const description = await await this.descriptionLocator(randomItemName).innerText();
 
-    return { name: popedElement, price, description };
+    return { name: randomItemName, price, description };
   }
 }
