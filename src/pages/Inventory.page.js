@@ -1,9 +1,7 @@
-// import { popRandomElementFrom } from "../Utils/utils";
 import { popRandomElementFrom } from "../Utils/utils";
 
 const { BaseSwagLabPage } = require("./BaseSwagLab.page");
 const { expect } = require("@playwright/test");
-//const {popedElement} = require("../Utils/utils");
 
 export class InventoryPage extends BaseSwagLabPage {
   url = "/inventory.html";
@@ -119,7 +117,6 @@ export class InventoryPage extends BaseSwagLabPage {
     let selectedNames = [];
     let allItesTogether = [];
     for (let i = 0; i < 4; i++) {
-      //const utils =  new Utils;
       const randomItemName = popRandomElementFrom(allNames, selectedNames);
       const item = await this.#inventoryItemNameSelector(randomItemName);
 
