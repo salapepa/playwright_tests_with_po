@@ -26,25 +26,42 @@ test.describe('', () => {
         await expect(app.shopingCartPage.cartItems).not.toBeAttached();
     });
 
+    // Task1
     test('Perform sorting Price high to low', async ({ app }) => {
-        await expect(app.inventoryPage.headerTitle).toBeVisible();
         await app.inventoryPage.clickSorting('Price (high to low)');
-        await app.inventoryPage.expectSortingPriceHighLowIsCorrect();
+         const expectedSorting = await app.inventoryPage.doSortingPriceHighLow[0];
+         const actualSorting = await app.inventoryPage.doSortingPriceHighLow[1];
+         expect(expectedSorting).toEqual(actualSorting);
     });
 
     test('Perform sorting Price low to high', async ({ app }) => {
         await app.inventoryPage.clickSorting('Price (low to high)');
-        await app.inventoryPage.expectSortingPriceLowToHighIsCorrect();
+        const expectedSorting = await app.inventoryPage.doSortingPriceLowToHigh[0];
+         const actualSorting = await app.inventoryPage.doSortingPriceLowToHigh[1];
+         expect(expectedSorting).toEqual(actualSorting);
     });
 
     test('Perform sorting Z-A', async ({ app }) => {
         await app.inventoryPage.clickSorting('Name (Z to A)');
-        await app.inventoryPage.expectSortingNameZtoAIsCorrect();
+        const expectedSorting = await app.inventoryPage.doSortingNameZtoA[0];
+         const actualSorting = await app.inventoryPage.doSortingNameZtoA[1];
+         expect(expectedSorting).toEqual(actualSorting);
     });
 
     test('Perform sorting A-Z', async ({ app }) => {
         await app.inventoryPage.clickSorting('Name (A to Z)');
-        await app.inventoryPage.expectSortingNameAtoZIsCorrect();
+        const expectedSorting = await app.inventoryPage.doSortingNameAtoZ[0];
+         const actualSorting = await app.inventoryPage.doSortingNameAtoZ[1];
+         expect(expectedSorting).toEqual(actualSorting);
     });
     
+    //Task2
+    
+    test('Add random items to Cart', async ({ app }) => {
+        const randomAddedItems = await app.inventoryPage.addRandomItemsToCart();
+        await app.inventoryPage.clickGoToCart();
+        const itemsInCart = await app.shopingCartPage.getAllItemsInCart();
+        await expect(itemsInCart).toEqual(randomAddedItems);
+    });
+
 });

@@ -5,6 +5,10 @@ export class ShopingCartPage extends BaseSwagLabPage {
 
     cartItemSelector = '.cart_item';
 
+    cartItemNameLocator = this.page.locator('[data-test="inventory-item-name"]');
+    cartItemDescriptionLocator = this.page.locator('[data-test="inventory-item-desc"]');
+    cartItemPriceLocator = this.page.locator('[data-test="inventory-item-price"]');
+
     removeItemSelector = '[id^="remove"]';
 
     get headerTitle() { return this.page.locator('.title'); }
@@ -22,4 +26,21 @@ export class ShopingCartPage extends BaseSwagLabPage {
     async removeCartItemById(id) {
         await this.cartItems.nth(id).locator(this.removeItemSelector).click();
     }
+
+    async getAllItemsInCart() {
+        const countItemsInCart = await this.cartItemNameLocator.count();
+        let allItemsInCart= [];
+        for (let i = 0; i < countItemsInCart; i++) {
+            const itemName = await this.cartItemNameLocator.nth(i).innerText();
+            const itemDescription = await this.cartItemDescriptionLocator.nth(i).innerText();
+            const itemPrice = await this.cartItemPriceLocator.nth(i).innerText();
+            
+            allItemsInCart.push({
+                name:itemName, description: itemDescription, price:itemPrice
+            })
+        }
+        return allItemsInCart;
+    }
+
+
 }
