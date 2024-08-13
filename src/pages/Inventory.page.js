@@ -1,7 +1,6 @@
 import { popRandomElementFrom } from "../Utils/utils";
 
 const { BaseSwagLabPage } = require("./BaseSwagLab.page");
-const { expect } = require("@playwright/test");
 
 export class InventoryPage extends BaseSwagLabPage {
   url = "/inventory.html";
@@ -72,7 +71,7 @@ export class InventoryPage extends BaseSwagLabPage {
     }
   }
 
-  async expectSortingPriceHighLowIsCorrect() {
+  async doSortingPriceHighLow() {
     let allPrices = await this.page
       .locator('[data-test="inventory-item-price"]')
       .allInnerTexts();
@@ -80,10 +79,11 @@ export class InventoryPage extends BaseSwagLabPage {
       .map((element) => element.replace("$", ""))
       .map(parseFloat);
     let allPricesArraySorted = allPricesWithoutCurrency.sort((a, b) => a - b);
-    expect(allPricesArraySorted).toEqual(allPricesWithoutCurrency);
+
+    return [allPricesArraySorted, allPricesWithoutCurrency]; 
   }
 
-  async expectSortingPriceLowToHighIsCorrect() {
+  async doSortingPriceLowToHigh() {
     let allPrices = await this.page
       .locator('[data-test="inventory-item-price"]')
       .allInnerTexts();
@@ -91,23 +91,23 @@ export class InventoryPage extends BaseSwagLabPage {
       .map((element) => element.replace("$", ""))
       .map(parseFloat);
     let allPricesArraySorted = allPricesWithoutCurrency.sort((a, b) => b - a);
-    expect(allPricesArraySorted).toEqual(allPricesWithoutCurrency);
+    return [allPricesArraySorted, allPricesWithoutCurrency];
   }
 
-  async expectSortingNameAtoZIsCorrect() {
+  async doSortingNameAtoZ() {
     let allNames = await this.page
       .locator('[data-test="inventory-item-name"]')
       .allInnerTexts();
     let allNamesSorted = allNames.sort((a, b) => a - b);
-    expect(allNamesSorted).toEqual(allNames);
+    return [allNamesSorted, allNames];
   }
 
-  async expectSortingNameZtoAIsCorrect() {
+  async doSortingNameZtoA() {
     let allNames = await this.page
       .locator('[data-test="inventory-item-name"]')
       .allInnerTexts();
     let allNamesSorted = allNames.sort((a, b) => b - a);
-    expect(allNamesSorted).toEqual(allNames);
+    return [allNamesSorted, allNames];
   }
 
   async addRandomItemsToCart() {
